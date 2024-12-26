@@ -1,0 +1,136 @@
+format = """
+$directory\
+$git_branch\
+$git_status\
+$fill\
+$all\
+$line_break\
+$character\
+"""
+# $docker_context\
+# $package\
+# $c\
+# $dotnet\
+# $lua\
+# $nodejs\
+# $python\
+# $memory_usage\
+# $cmd_duration\
+# $jobs\
+# $battery\
+# $os\
+# $shell\
+add_newline = false
+
+[directory]
+truncate_to_repo = false
+home_symbol = '№'
+read_only = " 󰌾"
+
+[git_branch]
+format = "[$symbol$branch@$remote_name/$remote_branch ]($style)"
+symbol = " "
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+
+[fill]
+symbol = ' '
+
+[docker_context]
+symbol = ' '
+format = '[$symbol$context]($style) $path'
+detect_extensions = ['Dockerfile']
+
+[package]
+symbol = '󰏗 '
+
+[c]
+symbol = ' '
+format = '[$symbol($version )]($style)'
+
+[cmake]
+format = '[$symbol($version )]($style)'
+
+[dotnet]
+symbol = '󰪮 '
+
+[lua]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[nodejs]
+symbol = ' '
+
+[python]
+symbol = ' '
+format = '[${symbol}(${version} )(\($virtualenv\) )]($style)'
+
+[memory_usage]
+disabled = false
+symbol = "󰍛 "
+
+[cmd_duration]
+min_time = 500
+format = '[$duration]($style)'
+
+[jobs]
+symbol = ' '
+
+# [battery]
+# full_symbol = "🔋"
+# charging_symbol = "🔌"
+# discharging_symbol = "⚡"
+
+[os]
+disabled = false
+
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Artix = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "󰛓 "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = "󰈺 "
+openSUSE = " "
+OracleLinux = "󰌷 "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+Redox = "󰀘 "
+Solus = "󰠳 "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Windows = ' '
+
+[shell]
+disabled = false
+powershell_indicator = ''
+pwsh_indicator = ''
+bash_indicator = ''
+zsh_indicator = '%_'
+cmd_indicator = ''
+unknown_indicator = ''
