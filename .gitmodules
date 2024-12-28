@@ -1,0 +1,3 @@
+[submodule ".vim/pack/visual/opt/vim"]
+	path = .vim/pack/visual/opt/vim
+	url = https://github.com/nordtheme/vim.git
