@@ -1,40 +1,74 @@
 " Encode
+
 set encoding=utf-8
 
 " Format
+
 set nocompatible
 filetype on
 filetype plugin on
 filetype indent on
 set tabstop=4
+set shiftwidth=4
 set autoindent
 set smartindent
 set formatoptions+=w
 
-" Visual
+" Visual {{{
+
 syntax on
-set wrap
 set showcmd
-set showmode
-" set cursorline
 set fillchars+=vert:\▏
 set foldmethod=marker
+let &t_SI.="\e[5 q" "SI = INSERT mode
+let &t_SR.="\e[3 q" "SR = REPLACE mode
+let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
+"Cursor settings:
+"  1 -> blinking block
+"  2 -> solid block 
+"  3 -> blinking underscore
+"  4 -> solid underscore
+"  5 -> blinking vertical bar
+"  6 -> solid vertical bar
+"}}}
 
 " Search
+
 set ignorecase
 set smartcase
 set incsearch
 set hlsearch
-nnoremap <CR> :noh<CR><CR>:<backspace>
-vnoremap <C-S-C> :w !clip.exe
-" Interacte
+
+" Interacte {{{
+
+set noswapfile
+set ttimeout
+set ttimeoutlen=5
 set mouse=a
 set scrolloff=40
-set clipboard=unnamed
-set conceallevel=1
 set wildmode=list:longest,full
 set wildoptions=fuzzy,tagfile
 set wildignore=*.docx,*.jpg,*.png,*.exr,*.tif,*.gif,*.hrd,*.svg,*.fbx,*.gitf,*.glb,*.blender,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
+
+if executable('wl-copy') && executable('wl-paste')
+	set clipboard+=unnamedplus
+endif
+"}}}
+		
+" Mapping
+
+for i in range(97,122)
+  let c = nr2char(i)
+  exec "set <M-".c.">=\e".c
+endfor
+
+nnoremap <C-l> :noh<CR><C-l>
+inoremap <C-s> <Esc>:Lexplore<CR>
+nnoremap <C-s> :Lexplore<CR>
+inoremap <A-s> <Esc>:Lexplore %:p:h<CR>
+nnoremap <A-s> :Lexplore %:p:h<CR>
+nnoremap <C-n> :set number!<CR>:set relativenumber!<CR>
+vnoremap <C-S-c> :w !clip.exe
 
 " Auto close {{{
 " autoclose and position cursor to write text inside
@@ -90,28 +124,12 @@ inoremap {,<CR> {<CR>},<ESC>O
 
 " Netrw {{{
 let g:netrw_keepdir=0
-let g:netrw_winsize=27
+let g:netrw_winsize=14
 let g:netrw_banner=0
+let g:netrw_fastbrowse=0
 let g:netrw_localcopydircmd='cp -r'
-let g:netrw_liststyle=3
-inoremap <C-b> <Esc>:Lexplore<CR>
-nnoremap <C-b> :Lexplore<CR>
-
-function! NetrwRemoveRecursive()
-  if &filetype ==# 'netrw'
-    cnoremap <buffer> <CR> rm -r<CR>
-    normal mu
-    normal mf
-
-    try
-      normal mx
-    catch
-      echo "Canceled"
-    endtry
-
-    cunmap <buffer> <CR>
-  endif
-endfunction
+let g:netrw_localmkdir='mkdir -p'
+let g:netrw_localrmdir='rm -r'
 
 function! NetrwMapping()
 		nmap <buffer> h -
@@ -121,11 +139,10 @@ function! NetrwMapping()
 		nmap <buffer> P <C-w>z
 		nmap <buffer> <TAB> mf
 		nmap <buffer> <S-TAB> mF
-		nmap <buffer> <Leader><TAB> mu
-		nmap <buffer> n %:w<CR>:buffer #<CR>
-		nmap <buffer> ml :echo join(netrw#Expose("netrwmarkfilelist"), "\n")<CR>
-		nmap <buffer> ft mt:echo 'Target:' . netrw#Expose("netrwmftgt")<CR>
-		nmap <buffer> fr :call NetrwRemoveRecursive()<CR>
+		nmap <buffer> n Ccd%:w<CR>:buffer #<CR>
+		nmap <buffer> ff :echo 'Target: ' . netrw#Expose("netrwmftgt")<CR>
+		nmap <buffer> fl :echo join(netrw#Expose("netrwmarkfilelist"), "\n")<CR>
+		nmap <buffer> ft mt:echo 'Target: ' . netrw#Expose("netrwmftgt")<CR>
 endfunction
 
 augroup netrw
@@ -135,24 +152,16 @@ augroup END
 "}}}
 
 " Plugin
-call plug#begin('~/.vim/plugged')
 
-Plug 'nordtheme/vim'
-
-call plug#end()
+packadd! vim
 
 " Nord
 " let g:nord_cursor_line_number_background=1
 let g:nord_italic=1
 let g:nord_italic_comments=1
 
-augroup nord
-	autocmd!
-	autocmd ColorScheme nord highlight Folded guibg=NONE ctermbg=NONE guifg=#d8dee9
-	autocmd ColorScheme nord highlight Comment guifg=#7c869a
-augroup END
-
 " Color
+
 set termguicolors
 colorscheme nord
 
@@ -161,4 +170,6 @@ if &diff
 else
 	hi Normal guibg=NONE ctermbg=NONE
 	hi VertSplit guibg=NONE ctermbg=NONE
+	hi Folded guibg=NONE ctermbg=NONE
+	hi TablineSel guibg=NONE
 endif
