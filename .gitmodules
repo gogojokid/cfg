@@ -1,0 +1,3 @@
+[submodule "vim-nord"]
+	path = .vim/pack/visual/opt/vim
+	url = https://github.com/gogojokid/vim-nord
