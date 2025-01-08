@@ -1,4 +1,5 @@
 vim9script
+
 # Format
 
 filetype on
@@ -6,37 +7,97 @@ filetype plugin on
 filetype indent on
 set fileformat=unix
 set encoding=utf-8
+set textwidth=0
 set nocompatible
+set expandtab
+set smarttab
 set tabstop=4
 set shiftwidth=4
+set softtabstop=4
 set autoindent
 set smartindent
-set formatoptions+=w
 
-# Visual {{{
+# Visual {{{1
 
 syntax on
 set showcmd
+set verbose=0
 set fillchars+=vert:\▏
 set foldmethod=marker
 set ruler
-set rulerformat=%55(%Y\ \%{&fenc}\ %{&ff}\ %q\ %k\ L:%l/%L\ C:%c\ 0x%B\ %p%%\ %oB%)
+set rulerformat=%55(%=%Y\ \%{&fenc}\ %{&ff}\ %q\ %k\ 0x%B\ C:%c\ L:%l/%L\ %oB\ %p%%%)
+set statusline=[%n]\ %<%F%M%r%h%w\ %#StatusLineNC#%=%##\ %Y\ \%{&fenc}\ %{&ff}\ %q\ %k\ 0x%B\ C:%c\ L:%l/%L\ %oB\ %p%%
+&t_SI = &t_SI .. "\e[5 q" #SI = INSERT mode
+&t_SR = &t_SR .. "\e[3 q" #SR = REPLACE mode
+&t_EI = &t_EI .. "\e[1 q" #EI = NORMAL mode (ELSE)
+
 augroup netrw_stl
 	autocmd!
 	autocmd FileType netrw setlocal statusline=%n\ %<%f\ %=%L
 augroup END
 
-set statusline=%n\ %<%F%M%r%h%w\ %#StatusLineNC#%=%##\ %Y\ \%{&fenc}\ %{&ff}\ %q\ %k\ L:%l/%L\ C:%c\ 0x%B\ %p%%\ %oB
-&t_SI = &t_SI .. "\e[5 q" #SI = INSERT mode
-&t_SR = &t_SR .. "\e[3 q" #SR = REPLACE mode
-&t_EI = &t_EI .. "\e[1 q" #EI = NORMAL mode (ELSE)
-#Cursor settings:
-#  1 -> blinking block
-#  2 -> solid block 
-#  3 -> blinking underscore
-#  4 -> solid underscore
-#  5 -> blinking vertical bar
-#  6 -> solid vertical bar
+# Line Number {{{2
+
+const NO_WRITE = ['netrw', 'help']
+
+def SetLineNumber(): void
+    if index(NO_WRITE, &filetype) > -1
+        return
+    else
+        setlocal relativenumber
+    endif
+enddef
+
+def SetNoLineNumber(): void
+    if index(NO_WRITE, &filetype) > -1
+        return
+    else
+        setlocal norelativenumber
+    endif
+enddef
+
+var line_number_sleep = {
+    replace: true,
+    group: 'LineNumberSleep',
+    event: 'KeyInputPre',
+    pattern: '*',
+    cmd: 'call EnableLineNumber()'
+}
+
+def EnableLineNumber(): void
+    SetLineNumber()
+    autocmd_delete([line_number_sleep])
+    autocmd_add([
+        {
+            replace: true,
+            group: 'LineNumberAwaken',
+            event: 'WinEnter',
+            pattern: '*',
+            cmd: 'call SetLineNumber()'
+        }, {
+            replace: true,
+            group: 'LineNumberAwaken',
+            event: 'WinLeave',
+            pattern: '*',
+            cmd: 'call SetNoLineNumber()'
+        }, {
+            replace: true,
+            group: 'LineNumberAwaken',
+            event: 'CursorHold',
+            pattern: '*',
+            cmd: 'call DisableLineNumber()'
+        }
+    ])
+enddef
+
+def DisableLineNumber(): void
+    SetNoLineNumber()
+    autocmd_delete([{group: 'LineNumberAwaken'}])
+    autocmd_add([line_number_sleep])
+enddef
+
+autocmd_add([line_number_sleep])
+# }}}
 # }}}
 
 # Search
@@ -46,33 +107,34 @@ set smartcase
 set incsearch
 set hlsearch
 
-# Interacte {{{
+# Interacte 
 
 set noswapfile
 set ttimeout
 set ttimeoutlen=5
 set mouse=a
 set scrolloff=40
+# set virtualedit=all
 set undofile
 set undodir=~/.vim/undodir
 set history=1000
 set wildmode=list:longest,full
 set wildoptions=fuzzy,tagfile
 set wildignore=*.docx,*.jpg,*.png,*.exr,*.tif,*.gif,*.hrd,*.svg,*.fbx,*.gitf,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
+set clipboard+=unnamedplus
 
-# if has('unnamedplus')
-# 	set clipboard+=unnamedplus
-# elseif has('unnamed')
-# 	set clipboard+=unnamed
-# elseif executable('wl-copy') && executable('wl-paste')
-# 	vnoremap <silent> z :w !wl-copy<CR><CR>
-# elseif executable('clip.exe')
-# 	vnoremap <silent> z :w !clip.exe<CR><CR>
-# endif
-# }}}
-		
-# Mapping
+# Mapping {{{
          
+g:mapleader = " "
+
+nnoremap gcl <ScriptCmd>g:NcToggleRight()<CR>
+nnoremap gch <ScriptCmd>g:NcToggleLeft()<CR>
+xnoremap gcj :NcToggleDownV<CR>
+xnoremap gck :NcToggleUpV<CR>
+xnoremap gcl :NcToggleRightV<CR>
+xnoremap gch :NcToggleLeftV<CR>
+
+# support meta/alt modifier
 var c: string
 for i in range(97, 122)
   c = nr2char(i)
@@ -80,14 +142,31 @@ for i in range(97, 122)
 endfor
 c = null_string
 
-nnoremap <silent> <C-l> :noh<CR><C-l>
+# support wsl copy to windos clipboard
+if executable('clip.exe')
+	vnoremap <silent> <C-c> :w !clip.exe<CR><CR>
+endif
+
+# fast motion
+nnoremap \ :
+nnoremap Y y$
+nnoremap <Leader>j <C-w>j
+nnoremap <Leader>k <C-w>k
+nnoremap <Leader>h <C-w>h
+nnoremap <Leader>l <C-w>l
+nnoremap <A-j> <C-w>-
+nnoremap <A-k> <C-w>+
+nnoremap <A-h> <C-w><
+nnoremap <A-l> <C-w>>
+
+# common features
+nnoremap <silent> <C-l> :nohlsearch<CR><C-l>
+nnoremap <silent> <C-n> :set relativenumber!<CR>:set cursorline!<CR>
 inoremap <silent> <C-s> <Esc>:Lexplore<CR>
 nnoremap <silent> <C-s> :Lexplore<CR>
 inoremap <silent> <A-s> <Esc>:Lexplore %:p:h<CR>
 nnoremap <silent> <A-s> :Lexplore %:p:h<CR>
-nnoremap <silent> <C-n> :set relativenumber!<CR>
 
-# Auto close {{{
 # autoclose and position cursor to write text inside
 inoremap <silent> ' ''<left>
 inoremap <silent> ` ``<left>
@@ -140,8 +219,9 @@ inoremap <silent> {,<CR> {<CR>},<ESC>O
 # }}}
 
 # Netrw {{{
+
 g:netrw_keepdir = 0
-g:netrw_winsize = 14
+g:netrw_winsize = 20
 g:netrw_banner = 0
 g:netrw_fastbrowse = 0
 g:netrw_localcopydircmd = 'cp -r'
@@ -162,29 +242,43 @@ def NetrwMapping(): void
 		nmap <buffer> ft mt:echo 'Target: ' . netrw#Expose("netrwmftgt")<CR>
 enddef
 
-augroup netrw
-		autocmd!
-		autocmd filetype netrw NetrwMapping()
-augroup END
-#}}}
+autocmd_add([{replace: true, group: 'NetrwMap', event: 'Filetype', pattern: 'netrw', cmd: 'NetrwMapping()'}])
+# }}}
 
-# Plugin
+# Plugin {{{
 
+packadd! matchit
+packadd! editorconfig
+packadd! comment
+packadd! nocomment
 packadd! vim
+
+# Editorconfig
+g:EditorConfig_max_line_indicator = 'exceeding'
+
+# Comment
+autocmd_add([
+    {
+        replace: true,
+        group: 'CommentOverwrite',
+        event: 'Filetype',
+        pattern: 'c',
+        cmd: 'setlocal commentstring=//\ %s'
+    }
+])
 
 # Nord
 # let g:nord_cursor_line_number_background=1
 g:nord_italic = 1
 g:nord_italic_comments = 1
+# }}}
 
 # Color
 
 set termguicolors
 colorscheme nord
 
-if &diff
-	
-else
+if !&diff
 	hi Normal guibg=NONE ctermbg=NONE
 	hi VertSplit guibg=NONE ctermbg=NONE
 	hi Folded guibg=NONE ctermbg=NONE

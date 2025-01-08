@@ -1,3 +1,6 @@
 [submodule "vim-nord"]
 	path = .vim/pack/visual/opt/vim
 	url = https://github.com/gogojokid/vim-nord
+[submodule ".vim/pack/tpope/.vim/pack/tpope/start/surround"]
+	path = .vim/pack/tpope/.vim/pack/tpope/start/surround
+	url = https://tpope.io/vim/surround.git
