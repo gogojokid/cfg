@@ -4,3 +4,6 @@
 [submodule "no"]
 	path = .vim/pack/no
 	url = https://github.com/gogojokid/vim-no_plus.git
+[submodule "surround"]
+    path = .vim/pack/tpope/start/surround
+    url = https://tpope.io/vim/surround.git
