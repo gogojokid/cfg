@@ -158,8 +158,8 @@ function M.setup(config)
     { key = 'p', mods = 'SHIFT|CTRL',  action = act.ActivateCommandPalette },
     { key = 'r', mods = 'SHIFT|CTRL',  action = act.ReloadConfiguration },
     { key = 'r', mods = 'SUPER',       action = act.ReloadConfiguration },
-    { key = 't', mods = 'CTRL',        action = act.SpawnTab 'CurrentPaneDomain' },
-    { key = 't', mods = 'SHIFT|CTRL',  action = act.ShowLauncher },
+    { key = 't', mods = 'ALT',        action = act.SpawnTab 'CurrentPaneDomain' },
+    { key = 't', mods = 'ALT|SHIFT',  action = act.ShowLauncher },
     {
       key = 'u',
       mods = 'SHIFT|CTRL',
