@@ -6,7 +6,7 @@
 	url = https://github.com/gogojokid/vim-no_plus.git
 [submodule "surround"]
     path = .vim/pack/tpope/start/surround
-    url = https://tpope.io/vim/surround.git
+    url = https://github.com/tpope/vim-surround
 [submodule ".vim/pack/syntax/opt/lsp"]
 	path = .vim/pack/syntax/opt/lsp
 	url = https://github.com/yegappan/lsp
