@@ -7,3 +7,6 @@
 [submodule "surround"]
     path = .vim/pack/tpope/start/surround
     url = https://tpope.io/vim/surround.git
+[submodule ".vim/pack/syntax/opt/lsp"]
+	path = .vim/pack/syntax/opt/lsp
+	url = https://github.com/yegappan/lsp
