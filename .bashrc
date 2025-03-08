@@ -18,6 +18,7 @@ alias z="zypper if"
 alias zs="zypper se"
 alias zi="zypper in"
 alias zu="zypper up"
+alias zr="zypper refresh"
 alias et="enter"
 alias config='/usr/bin/git --git-dir=/home/noctor/.cfg/ --work-tree=/home/noctor'
 

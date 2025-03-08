@@ -47,6 +47,7 @@ C.window_decorations = 'RESIZE' -- disable the title bar but enable the resizabl
 C.color_scheme = SCHEME_NAME
 C.use_fancy_tab_bar = false
 C.hide_tab_bar_if_only_one_tab = true
+C.tab_bar_at_bottom = true
 
 C.colors = {
   tab_bar = {
@@ -87,7 +88,7 @@ C.colors = {
 }
 
 C.window_background_opacity = 0.6
-C.text_background_opacity = 0.65
+C.text_background_opacity = 0.3
 C.default_cursor_style = 'BlinkingBlock'
 C.font = W.font('FiraCode Nerd Font')
 C.font_size = 12.5

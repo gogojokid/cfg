@@ -148,7 +148,7 @@ function M.setup(config)
     { key = 'c', mods = 'SHIFT|CTRL',  action = act.CopyTo 'Clipboard' },
     { key = 'c', mods = 'SUPER',       action = act.CopyTo 'Clipboard' },
     { key = 'f', mods = 'SHIFT|CTRL',  action = act.ToggleAlwaysOnTop },
-    { key = 'f', mods = 'CTRL',        action = act.Search 'CurrentSelectionOrEmptyString' },
+    { key = 'f', mods = 'ALT',        action = act.Search 'CurrentSelectionOrEmptyString' },
     { key = 'k', mods = 'SHIFT|CTRL',  action = act.ClearScrollback 'ScrollbackOnly' },
     { key = 'k', mods = 'SUPER',       action = act.ClearScrollback 'ScrollbackOnly' },
     { key = 'l', mods = 'SHIFT|CTRL',  action = act.ShowDebugOverlay },

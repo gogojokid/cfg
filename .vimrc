@@ -119,6 +119,7 @@ set scrolloff=40
 set undofile
 set undodir=~/.vim/undodir
 set history=1000
+set path+=**
 set wildmode=list:longest,full
 set wildoptions=fuzzy,tagfile
 set wildignore=*.docx,*.jpg,*.png,*.exr,*.tif,*.gif,*.hrd,*.svg,*.fbx,*.gitf,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
@@ -150,6 +151,11 @@ c = null_string
 if executable('clip.exe')
 	vnoremap <silent> <C-c> :w !clip.exe<CR><CR>
 endif
+
+# unmap windows C-f search
+# if has('gui')
+#     nunmap <c-f>
+# endif
 
 # fast motion
 nnoremap \ :
@@ -337,6 +343,7 @@ if !&diff
 	hi StatusLineNC guibg=NONE
     hi StatusLineTermNC guibg=NONE
     hi FoldColumn guibg=NONE
+    hi SignColumn guibg=NONE
 endif
 # }}}
 
